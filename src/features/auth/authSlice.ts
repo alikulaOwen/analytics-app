@@ -1,13 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import authService from './Services/auth.service';
-import { DisplayUser } from './Models/displayUser';
 import { Jwt } from './Models/token';
 import { RootState } from '../../app/store';
 import { LoginUser } from './Models/loginUser';
-
-// const storedUser: string | null = localStorage.getItem('user');
-// const user: DisplayUser | null = !!storedUser ? JSON.parse(storedUser) : null;
 
 const storedJwt: string | null = localStorage.getItem('jwt');
 const jwt: Jwt = !!storedJwt ? JSON.parse(storedJwt) : null;
@@ -22,6 +18,7 @@ interface AsyncState {
 interface AuthState extends AsyncState {
   jwt?: Jwt;
   isAuthenticated?: boolean;
+  message: string;
 }
 
 const initialState: AuthState = {
@@ -30,11 +27,12 @@ const initialState: AuthState = {
   isLoading: false,
   isSuccess: false,
   isError: false,
+  message: ''
 };
 
 
 export const login = createAsyncThunk(
-  '/login',
+  'auth/login',
   async (user: LoginUser, thunkAPI) => {
     try {
       return await authService.login(user);
@@ -71,7 +69,8 @@ export const authSlice = createSlice({
         state.isAuthenticated = true;
         
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action: any) => {
+        state.message = action.payload;
         state.isLoading = false;
         state.isError = true;
         state.isAuthenticated = false;

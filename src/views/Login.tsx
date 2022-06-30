@@ -31,7 +31,7 @@ export const Login: FC = ()=>{
   
   const dispatch = useAppDispatch();
 
-  const { isSuccess, isAuthenticated } = useAppSelector(
+  const { isSuccess, isAuthenticated, isError, isLoading, message } = useAppSelector(
     (state) => state.auth
   );
 
@@ -50,9 +50,13 @@ export const Login: FC = ()=>{
   
   useEffect(() => {
     if (!isAuthenticated) return;
-    navigate('/')
+
+    if (isError){
+      alert(message)
+    }
+    navigate('/app')
     
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isError, message, navigate]);
 
   const onSubmitHandler = () => {
 
@@ -64,14 +68,13 @@ export const Login: FC = ()=>{
       email, password,
       persistent: true
     };
-    console.log(loginUser)
 
     dispatch(login(loginUser));
   };
 
     
     return (
-        <div className="h-screen bg-backgroundGray flex justify-center  items-center">
+        <div className="h-screen w-full bg-backgroundGray flex justify-center  items-center">
       <div className="w-[300px]  ">
         <img className="bwala-logo w-full" src='https://admin-prod.duhqa.com/static/media/bwala_logo.030aa2d1.svg' alt="bwala logo" />
         <Form 

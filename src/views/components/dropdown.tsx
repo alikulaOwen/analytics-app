@@ -1,22 +1,22 @@
 
 import { Dropdown, Menu, } from 'antd';
 import 'antd/dist/antd.css';
+import { FC } from 'react';
 
 
-const DropdownLogOut = () => (
-  <>
+const DropdownLogOut: FC<{onClickHandler?: any}> = ({onClickHandler}) => (
+
         <Dropdown
           overlay={(
             <Menu>
-              <Menu.Item key="0">
+              <Menu.Item key="0" onClick={onClickHandler}>
                 LogOut
               </Menu.Item>
               
             </Menu>
           )}
           trigger={['click']}>
-          <button className="ant-dropdown-link" 
-             onClick={e => e.preventDefault()}>
+          <button className="ant-dropdown-link">
             <span role="img" aria-label="caret-down" className="anticon anticon-caret-down">
                 <svg viewBox="0 0 1024 1024" focusable="false" className="" data-icon="caret-down" 
                 width="1em" height="1em" fill="currentColor" aria-hidden="true">
@@ -28,7 +28,7 @@ const DropdownLogOut = () => (
             </span>
           </button>
         </Dropdown>
-      </>
+
 );
 
 export default DropdownLogOut;

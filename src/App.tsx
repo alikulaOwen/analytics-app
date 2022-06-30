@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { Login } from './views/Login';
 import {
   BrowserRouter as Router,
@@ -9,16 +8,20 @@ import {
 } from 'react-router-dom';
 import { MainApp } from './views/main';
 import PrivateRoute from './views/privateRoute';
+
 //import { MainApp } from './views/main';
 
 function App() {
+  // const {isLoading,isSuccess,isAuthenticated} =useAppSelector((state)=>state.auth)
+
+    // Loading state 
   return (
-    <div className="App">
+    <div className="App flex h-screen w-screen items-center justify-center">
         <Router>
           <Routes>
-            <Route path='/'element={<PrivateRoute page={<MainApp />} />}/>
-            <Route path='/login' element={<Login />} />
-           <Route path='*' element={<Navigate to='/login' />} />
+            <Route path='/app/*'element={<PrivateRoute page={<MainApp />} />}/>
+            <Route path='/signin' element={<Login />} />
+            <Route path='*' element={<Navigate to='/signin' />} />
             
           </Routes>
         </Router>

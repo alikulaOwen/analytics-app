@@ -5,8 +5,7 @@ import { LoginUser } from '../Models/loginUser';
 const login = async (
   user: LoginUser
 ): Promise<{ jwt: Jwt }> => {
-  console.log(user)
-
+  // user sign in endpoint
   const response = await axios.post(
     `https://apiv2.duhqa.com/api/v1.0/Auth/Authentication`,
     user,
@@ -16,10 +15,9 @@ const login = async (
           }}
   );
   
- 
+ //sets jwt to local storage
   if (response.data) {
     localStorage.setItem('jwt', JSON.stringify(response.data));
-    console.log(localStorage.getItem('jwt'))
     return { jwt: response.data};
   }
 
