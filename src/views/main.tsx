@@ -7,7 +7,6 @@ import { OverviewComponent } from './pages/overview';
 import ShopChartsPage from './pages/shops';
 import ProductsChartPage from './pages/products';
 import DriversChartPage from './pages/drivers';
-import { useAppSelector } from '../app/hooks';
 import { ScaleLoader } from 'react-spinners';
 
 interface IMainApp {}
@@ -40,7 +39,7 @@ export const MainApp: FC<IMainApp> = () =>{
                     <Route path="products" element={<ProductsChartPage/>} />
                     <Route path="drivers" element={<DriversChartPage/>} />
                     <Route path="customers" element={<ProductsChartPage/>} />
-                    <Route path="overview" element={<OverviewComponent/>} />
+                    <Route path="" element={<OverviewComponent/>} />
             </Routes>
            
         </div>

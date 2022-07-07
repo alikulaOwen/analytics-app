@@ -37,7 +37,10 @@ export const login = createAsyncThunk(
     try {
       return await authService.login(user);
     } catch (error) {
-      return thunkAPI.rejectWithValue('Unable to login');
+      if (!error.response) {
+        throw error
+      }
+      return thunkAPI.rejectWithValue('Unable to login, please double-check your credintials');
     }
   }
 );
@@ -61,13 +64,15 @@ export const authSlice = createSlice({
       // LOGIN
       .addCase(login.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.isError = false;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.jwt = action.payload.jwt;
         state.isAuthenticated = true;
-        
+        state.isError = false;
       })
       .addCase(login.rejected, (state, action: any) => {
         state.message = action.payload;

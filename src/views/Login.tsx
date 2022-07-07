@@ -1,4 +1,5 @@
-import { Form, Input } from "antd";
+import { Form, Input, notification } from "antd";
+import { SmileOutlined } from '@ant-design/icons';
 import { FC, 
   useEffect 
 } from "react";
@@ -41,28 +42,42 @@ export const Login: FC = ()=>{
     emailClearHandler();
     passwordClearHandler();
   };
+    // if (isError) {
+    //   openNotification(message, "Login Error", <SmileOutlined style={{ color: '#ee0202 !important' }} />)
 
+    // }
     if (isSuccess) {
       dispatch(reset());
       clearForm();
     }
-  }, [isSuccess, dispatch, emailClearHandler, passwordClearHandler]);
+  }, [isSuccess, dispatch, emailClearHandler, passwordClearHandler,]);
   
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    if (isError){
-      alert(message)
-    }
+    
     navigate('/app')
     
   }, [isAuthenticated, isError, message, navigate]);
+   
+
+  const openNotification = (msg: string, title: string, icon: any) => {
+    notification.open({
+      message: title,
+      description:
+        msg,
+      icon: icon,
+    });
+  };
+
 
   const onSubmitHandler = () => {
 
     if (emailHasError || passwordHasError) return;
 
     if (email.length === 0 || password.length === 0) return;
+    
+    
 
     const loginUser: LoginUser = {
       email, password,
@@ -70,6 +85,11 @@ export const Login: FC = ()=>{
     };
 
     dispatch(login(loginUser));
+
+    if (isError) {
+      openNotification(message, "Login Error", <SmileOutlined style={{ color: '#ee0202' }} />)
+
+    }
   };
 
     

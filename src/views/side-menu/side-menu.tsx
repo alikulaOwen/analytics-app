@@ -101,8 +101,7 @@ export const SideMenuComponent: FC = () =>{
         })}
               
 </ul>
-
-              <div className="bottom-card flex h-[12vh] items-center justify-center ">
+<div className="bottom-card flex h-[12vh] items-center justify-center ">
                   <div className="wrapper bg-bwalaPrimary hover:border-bwalaPrimary hover:border-2
                   h-[6vh] w-[15vw] rounded-md flex justify-center items-center bg">
                       <a href='https://admin-prod.duhqa.com/' className='flex justify-start items-center hover:text-bwalaPrimary'>

@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action, combineReducers, } from '@reduxjs/
 import authReducer from '../features/auth/authSlice';
 import salesReducer from '../features/analytics/saleSummarySlice'
 import ordersReducer from '../features/orderAnalytics/ordersSummarySlice'
+import { UndeliveredApi } from '../features/undelivered/service/UndeliveredApi';
 import storage from 'redux-persist/lib/storage';
 import { 
   persistReducer, persistStore,
@@ -21,7 +22,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     auth: authReducer,
     sales: salesReducer,
-    orders: ordersReducer
+    orders: ordersReducer,
+    [UndeliveredApi.reducerPath]: UndeliveredApi.reducer
 })
 
 
@@ -33,7 +35,7 @@ export const store = configureStore({
     serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },}
-  ),
+  ).concat(UndeliveredApi.middleware),
 
 })
 
