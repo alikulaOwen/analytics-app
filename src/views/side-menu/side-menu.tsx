@@ -1,30 +1,35 @@
-import  { FC, useState } from 'react'
+import  { FC, useEffect, useState } from 'react'
 import imageholder from '../../assets/download.png'
 import DropdownLogOut from '../components/dropdown';
 
 import { logout } from "../../features/auth/authSlice";
 import { NavLink } from 'react-router-dom';
 
+import jwt_decode from 'jwt-decode';
+
+import logo from '../../assets/analysis.png'
+
 import {ArrowBackRounded, InventoryOutlined,
     DashboardOutlined, DriveEtaOutlined, PeopleAltOutlined, ShoppingBasketOutlined, 
     StorefrontOutlined } from '@mui/icons-material';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Jwt } from '../../features/auth/Models/token';
 
     export const SidebarData = [
   {
     icon: DashboardOutlined,
     heading: "Overview",
-    to: 'overview'
+    to: ''
   },
   {
-    icon: ShoppingBasketOutlined,
-    heading: "Orders",
-    to: 'orders'
+    icon: StorefrontOutlined,
+    heading: "Drivers",
+    to: 'drivers'
   },
    {
-    icon: StorefrontOutlined,
-    heading: "Shops",
-    to: 'shops'
+     icon: ShoppingBasketOutlined,
+    heading: "Orders",
+    to: 'orders'
 
   },
   {
@@ -39,8 +44,8 @@ import { useAppDispatch } from '../../app/hooks';
   },
   {
     icon: DriveEtaOutlined,
-    heading: 'Drivers',
-    to: 'drivers'
+    heading: 'Shops',
+    to: 'Shops'
   },
 ];
 
@@ -51,18 +56,27 @@ export const SideMenuComponent: FC = () =>{
 
     const [selected, setSelected] = useState(0);
     const dispatch = useAppDispatch()
+    
+  const { isSuccess, isAuthenticated, jwt } = useAppSelector(
+    (state) => state.auth
+  );
+
+   
 
     const onClickLogout= () => {
       dispatch(logout())
     }
 
     return(
-        <div className='w-[200px] h-screen bg-backgroundGray flex-1'>
-          <div className="side-menu-header bg-white h-[25vh] w-full 2xl:h-[20vh]">
-             <div className='py-[24px] px-[16px]'>
-                  <img 
-                  src='https://admin-prod.duhqa.com/static/media/bwala_logo.030aa2d1.svg'  
+        <div className='w-[210px] h-screen z-[1] overflow-hidden top-0 left-0 pt-1 bg-backgroundGray fixed'>
+          <div className="side-menu-header bg-white h-[25vh] w-full 2xl:h-[20vh] flex flex-col justify-evenly">
+             <div className='h-14 flex items-center'>
+                  <img className='ml-[11px] mt-2 h-8 w-8'
+              src={logo}
                   alt='bwala-logo'/>
+                  <div className="w-full h-10 ">
+                    <p className="mt-3 ml-2 text-lg font-normal">Duhqa Analytics</p>
+                  </div>
              </div>
              <div className="duhqa-user-info w-full h-[10vh] flex justify-between ">
                  <div className="user-bio-wrapper h-[8vh] w-[10vw] flex py-[24px] px-[16px]
@@ -72,7 +86,7 @@ export const SideMenuComponent: FC = () =>{
                      </div>
                      <div className='flex flex-col ml-1 mt-2
                      h-[4vh] w-[4vw] items-center justify-center'>
-                        <span className='text-xs mb-1'>Duhqa</span>
+                        <span className='text-xs mb-1'>Admin</span>
                         <span className='text-xs'>User</span>
                      </div>
                  </div>

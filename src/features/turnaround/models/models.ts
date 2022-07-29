@@ -1,4 +1,4 @@
-export interface ITurnAround {
+export interface TurnAround {
     customerNames:   string;
     orderDate:       Date;
     orderValue:      string;
@@ -10,13 +10,6 @@ export interface ITurnAround {
     deliveredWithin: string;
 }
 
-export interface CustomObj {
-    shopName:   string;
-    orderValue:   number;
-  
-}
-
-
 export enum TimeTarget {
     OffTarget = "Off Target",
     OnTarget = "On Target",
@@ -25,12 +18,15 @@ export enum TimeTarget {
 export enum ZoneName {
     Allsops = "Allsops ",
     Bahati = "Bahati",
+    Banana = "Banana",
+    Cbd = "CBD",
     DagorettiSouth = "Dagoretti South",
     Dandora = "Dandora",
     Donholm = "Donholm",
     Eastleigh = "Eastleigh",
     EmbakasiVillage = "Embakasi Village",
     Fedha = "Fedha",
+    Githura45 = "Githura 45",
     Githurai44 = "Githurai 44",
     Huruma = "Huruma",
     Kabete = "Kabete",
@@ -38,18 +34,23 @@ export enum ZoneName {
     KahawaWest = "Kahawa West",
     Kangemi = "Kangemi",
     KangundoRoad = "Kangundo Road",
+    KariobangiNorth = "Kariobangi North",
     KariobangiSouth = "Kariobangi South",
     Kawangware = "Kawangware",
     Kayole = "Kayole",
     KayoleC = "Kayole C",
+    KayoleJunction = "Kayole Junction",
     Kibera = "Kibera",
     Kinoo = "Kinoo",
     Kiserian = "Kiserian",
+    Komarock = "Komarock",
     Kware = "Kware",
     Langata = "Langata",
+    LowerKabete = "Lower Kabete",
     LuckySummerB = "Lucky Summer B",
     Mlolongo = "Mlolongo",
     NairobiWest = "Nairobi West",
+    Ngara = "Ngara",
     Ngong = "Ngong",
     Other = "Other",
     Pipeline = "Pipeline",

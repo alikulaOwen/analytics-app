@@ -16,7 +16,7 @@ function App() {
 
     // Loading state 
   return (
-    <div className="App flex h-screen w-screen items-center justify-center">
+    <div className="App h-screen w-screen ">
         <Router>
           <Routes>
             <Route path='/app/*'element={<PrivateRoute page={<MainApp />} />}/>

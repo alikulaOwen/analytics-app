@@ -1,4 +1,5 @@
 import { Form, Input, notification } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { SmileOutlined } from '@ant-design/icons';
 import { FC, 
   useEffect 
@@ -32,7 +33,7 @@ export const Login: FC = ()=>{
   
   const dispatch = useAppDispatch();
 
-  const { isSuccess, isAuthenticated, isError, isLoading, message } = useAppSelector(
+  const { isSuccess, isAuthenticated, isError, isLoading, message,} = useAppSelector(
     (state) => state.auth
   );
 
@@ -110,11 +111,11 @@ export const Login: FC = ()=>{
             />
           </Form.Item>
           <Form.Item>
-            <Input
+            <Input.Password
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               value={password}
               onChange={passwordChangeHandler}
               placeholder={'password'}
-              type={'password'}
               className="login-input w-full min-h-[32px] 
              py-1 px-[11px] bg-white mt-5 text-[14px]"
             />

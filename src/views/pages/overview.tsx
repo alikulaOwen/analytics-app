@@ -2,10 +2,9 @@ import { FC, useEffect, useState, } from 'react'
 import { Chart } from 'react-google-charts';
 import { UndeliveredObject } from '../../features/undelivered/model/undeliveredModel';
 import axios from 'axios';
-import { DatePickerProps, Form } from 'antd';
-import { DatePicker, Space } from 'antd';
+import { DatePicker } from 'antd';
 import moment from 'moment';
-import { Cancel, CancelOutlined} from '@mui/icons-material';
+import { Cancel} from '@mui/icons-material';
 import { IconButton } from '@material-ui/core';
 import { OrderSummary } from '../../features/orderAnalytics/models/summary';
 import { PropagateLoader } from 'react-spinners';
@@ -25,6 +24,12 @@ export const ButtonsData = [
 
   },
   {
+
+    heading: "last 7days",
+    func: 7
+
+  },
+  {
    
     heading: "last 30days",
     func: 30
@@ -37,7 +42,13 @@ export const ButtonsData = [
     
   },
 ];
-
+export default function zoneName(dataList: any) {
+  const zoneList: Array<string> = []
+  dataList.map((el: UndeliveredObject) => {
+    zoneList.push(el.zoneName)
+  })
+  return [...new Set(zoneList)];;
+}
 
 
 
@@ -58,14 +69,6 @@ export const OverviewComponent: FC<IOverView> = () => {
   const [endDate, setEndDate] = useState<any>('2022-07-22')
 
   const [ordersList, setOrdersList] = useState([])
-
-  const dateFormat = "YYYY-MM-DD"
-
-  // function convertDate(inputFormat: Date| string) {
-  //   function pad(s: string | number) { return (s < 10) ? '0' + s : s; }
-  //   var d = new Date(inputFormat)
-  //   return [d.getFullYear(), pad(d.getDate()), pad(d.getMonth() + 1),].join('-')
-  // }
 
   let myList: OrderSummary[] = ordersList
 
@@ -111,14 +114,13 @@ export const OverviewComponent: FC<IOverView> = () => {
     const fetchData = async () => {
       setIsLoading(true)
       await axios
-      .get(`https://glacial-shelf-82148.herokuapp.com/http://a332dda24be9448e89f1d52130700411-481831987.us-east-2.elb.amazonaws.com/SummarySalesUndelivered/${startDate}/${endDate}`).then((res) => {
+      .get(`https://glacial-shelf-82148.herokuapp.com/https://analytics.duhqa.com/SummarySales/${startDate}/${endDate}`).then((res) => {
         setDataList(res.data)
         setIsLoading(false)
         setStatus(res.status)
         setError(false)
-        console.log(res);
       
-      }).catch((res) => {
+      }).catch(() => {
           setStatus(404)
           setError(true)
           setIsLoading(true)
@@ -140,13 +142,7 @@ export const OverviewComponent: FC<IOverView> = () => {
   }, [startDate, endDate]);
   //console.log(data, isLoading, error,status)
   // get zone name
-  function zoneName(dataList: UndeliveredObject[]) {
-    const zoneList: Array<string> = []
-    dataList.map((el: UndeliveredObject) => {
-      zoneList.push(el.zoneName)
-    })
-    return [...new Set(zoneList)];;
-  }
+ 
   //console.log(zoneName(dataList));
   // function to get zone against totalOrders
 
@@ -154,15 +150,30 @@ export const OverviewComponent: FC<IOverView> = () => {
     const zoneNameList = zoneName(dataList)
     const dt = dataList
     const arr: Array<object> = [];
+    const list: Array<object> = [];
     for (let index = 0; index < zoneNameList.length; index++) {
       const element = zoneNameList[index];
       const local_arr: Array<string> = []
       local_arr.push(element)
+      
+      const Zonelist = dataList.filter((checkZone)=>{
+        if (checkZone.zoneName === element){
+          return checkZone
+        }
+
+      })
+      let ZoneOrderTally: Array<string| number> = [ element,Zonelist.length]
+
+      list.push(ZoneOrderTally)
+
       for (let index = 0; index < dt.length; index++) {
         const dt_object = dt[index];
-
+        
+        
         if (element === dt_object.zoneName) {
           local_arr.push(dt_object.orderValue)
+        
+         
         }
 
       }
@@ -178,28 +189,66 @@ export const OverviewComponent: FC<IOverView> = () => {
 
       arr.push(analytic)
     }
+    console.log(list)
     return arr
 
   }
+   function zoneOrderTally(dataList: UndeliveredObject[]){
+     const zoneNameList = zoneName(dataList)
+     const list: Array<object> = [];
+     for (let index = 0; index < zoneNameList.length; index++) {
+       const element = zoneNameList[index];
+       const local_arr: Array<string> = []
+       local_arr.push(element)
+
+       const Zonelist = dataList.filter((checkZone) => {
+         if (checkZone.zoneName === element) {
+           return checkZone
+         }
+
+       })
+       let ZoneOrderTally: Array<string | number> = [element, Zonelist.length]
+
+       list.push(ZoneOrderTally)
+   }
+   return list
+  }
+
+
   const datar = [
     ["Zone", "Orders Value",],
     ...filterData(dataList),
     
   ];
-  console.log(datar)
+  //console.log(datar)
+  const optionr = {
+    chart: {
+      title: "Duhqa Delivered",
+      subtitle: `"Delivered orders between ${startDate} and ${endDate} `,
+    },
+  };
+  const optionZone = {
+    chart: {
+      title: "Duhqa Delivered Order count per zone",
+      subtitle: `Delivered orders between ${startDate} and ${endDate} `,
+    },
+  };
 
-  
-  
+  const zonalTally =[
+    ["Zone Name", "Order Count"],
+    ...zoneOrderTally(dataList),
+
+  ]
 
 
 
   return (
 
-    <div className='bg-backgroundGray w-[84vw] h-[100vh] flex justify-center'>
+    <div className='bg-backgroundGray w-full h-auto flex justify-center m-5 '>
       
 
       <div className="flex flex-col">
-        <div className='main-card h-[60vh] bg-white w-[80vw] items-center '>
+        <div className='main-card h-[400px] bg-white w-[] items-center '>
           <div className="buttons-wrapper w-[78vw] h-8  mt-1 my-2 item-center">
             <div className={`${!hidePicker ? 'h-7 w-full pl-5 flex justify-start items-center' : 'hidden'} `}>
               {
@@ -225,7 +274,7 @@ export const OverviewComponent: FC<IOverView> = () => {
             </div>
             <div className={`${hidePicker ? 'h-7 w-full pl-5 flex justify-start items-center' : 'hidden'} `}>
 
-              <DatePicker placeholder='Start date' size='small' onChange={(startDate) => {setStartDate(startDate?.format("YYYY-MM-DD"))}}  />
+              <DatePicker  placeholder='Start date' size='small' onChange={(startDate) => {setStartDate(startDate?.format("YYYY-MM-DD"))}}  />
               <span className='mx-5'>to</span>
               <DatePicker placeholder='End date' size='small' onChange={(endDate) => { setEndDate(endDate?.format("YYYY-MM-DD"))}}  />
                 <IconButton onClick={() => setHidePicker(false)}>
@@ -243,12 +292,16 @@ export const OverviewComponent: FC<IOverView> = () => {
                 : <Chart chartType="Bar" width="98%" height="300px" data={datar} />  
             } */}
 
-            <Chart chartType="Bar" width="98%" height="300px" data={datar} />  
+            <Chart chartType="Bar" width="98%" height="300px" data={datar}  options={optionr}/>  
             
           </div>
         </div>
+        <div className="flex h-[450px] bg-white mt-3 pl-5 pt-4">
+          <Chart chartType="Bar" width="98%" height="300px" data={zonalTally} options={optionZone} /> 
+
+        </div>
         <div className="bottom-cards flex h-[40vh] w-[80vw] pt-3 justify-between">
-          <div className='h-[38vh] bg-white w-[39vw]'>
+          <div className='h-[38vh] bg-white w-[39.5vw]'>
             {
               isLoading
                 ? <div className="flex justify-center items-center w-[36vw] h-[32vh]">
@@ -259,14 +312,19 @@ export const OverviewComponent: FC<IOverView> = () => {
                   data={data}
                   options={options}
                   width={"98%"}
-                  height={"98%"}
+                  height="210px"
                 />}
-                
-            
-            
           </div>
-          <div className='h-[38vh] bg-white w-[39vw]'></div>
+          <div className='h-[38vh] bg-white w-[39.5vw] pl-2'>
+            <div className="flex justify-center items-center w-[36vw] h-[32vh]">
+              <PropagateLoader color='#11b196' />
+            </div>
+          </div>
         </div>
+        {/* <div className="flex h-[450px] bg-white mt-3 pl-5 pt-4">
+          
+
+        </div> */}
       </div>
     </div>
   )

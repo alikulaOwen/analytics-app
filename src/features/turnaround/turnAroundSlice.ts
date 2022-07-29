@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ITurnAround } from "./models/models";
+import { TurnAround } from "./models/models";
 
 
 interface turnAroundState {
-    turnAroundList: Array<ITurnAround>,
+    turnAroundList: Array<TurnAround>,
     isLoading: boolean,
     error: boolean,
 }
